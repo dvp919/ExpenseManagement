@@ -22,7 +22,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
                 startActivity(intent);
 
-
             }
         });
     }
