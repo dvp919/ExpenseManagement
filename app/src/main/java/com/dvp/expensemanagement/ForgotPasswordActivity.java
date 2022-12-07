@@ -18,86 +18,77 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends AppCompatActivity {
 
-    private EditText mEmail,mPass;
-    private Button btnReg;
-    private TextView btn_login;
+    private Button btnForgot;
+    private EditText mEmail;
+    private TextView mLogin;
 
     private ProgressDialog mDialog;
 
-    //Firebase..
-
+    //Firebase...
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-
+        setContentView(R.layout.activity_forgot_password);
 
         mAuth = FirebaseAuth.getInstance();
 
         mDialog = new ProgressDialog(this);
 
-        registration();
-
+        ForgotPassword();
 
     }
 
-    private void registration()
+    private void ForgotPassword()
     {
-        mEmail = findViewById(R.id.email_reg);
-        mPass = findViewById(R.id.password_reg);
-        btnReg = findViewById(R.id.btn_reg);
-        btn_login = findViewById(R.id.signin_here);
+        btnForgot = findViewById(R.id.btn_forgot);
+        mEmail = findViewById(R.id.email_forgot_password);
+        mLogin = findViewById(R.id.login_forgot);
 
-        btnReg.setOnClickListener(new View.OnClickListener() {
+        btnForgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
-                String pass = mPass.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email Required..");
                     return;
                 }
-                if(TextUtils.isEmpty(pass)){
-                    mPass.setError("Password Required");
-                    return;
-                }
 
-                mDialog.setMessage("Processing..");
+                mDialog.setMessage("Sending Email for reset Password...");
                 mDialog.show();
 
-                mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if(task.isSuccessful()){
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful())
+                        {
                             mDialog.dismiss();
-
-                            Toast.makeText(getApplicationContext(),"Registration Completed",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                            Toast.makeText(getApplicationContext(),"Email send for Reset Password",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
                         }
                         else
                         {
                             mDialog.dismiss();
-                            Toast.makeText(getApplicationContext(),"Registration Field...",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Unable to send Email, Please try again..",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
             }
+
         });
 
-        btn_login.setOnClickListener(new View.OnClickListener() {
+        mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
-
             }
         });
+
     }
 }
