@@ -23,6 +23,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
 
+    //Fragments
+
+    private DashBoardFragment dashBoardFragment;
+    private IncomeFragment incomeFragment;
+    private ExpenseFragment expenseFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +53,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.naView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        dashBoardFragment = new DashBoardFragment();
+        incomeFragment = new IncomeFragment();
+        expenseFragment = new ExpenseFragment();
+
+        setFragment(dashBoardFragment);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -54,16 +66,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     case R.id.dashboard:
 
+                        setFragment(dashBoardFragment);
                         bottomNavigationView.setItemBackgroundResource(R.color.dashboard_color);
                         return true;
 
                     case R.id.income:
 
+                        setFragment(incomeFragment);
                         bottomNavigationView.setItemBackgroundResource(R.color.income_color);
                         return true;
 
                     case R.id.expense:
 
+                        setFragment(expenseFragment);
                         bottomNavigationView.setItemBackgroundResource(R.color.expense_color);
                         return true;
 
@@ -74,6 +89,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
+    }
+
+    private void setFragment(Fragment fragment) {
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame,fragment);
+        fragmentTransaction.commit();
 
     }
 
@@ -99,14 +122,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         switch(itemId) {
             case R.id.dashboard:
 
+                fragment = new DashBoardFragment();
                 break;
 
             case R.id.income:
-
+                fragment = new IncomeFragment();
                 break;
 
             case R.id.expense:
-
+                fragment = new ExpenseFragment();
                 break;
         }
 
