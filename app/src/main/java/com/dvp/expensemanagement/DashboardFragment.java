@@ -7,58 +7,71 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DashboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class DashboardFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FloatingActionButton fab_main;
+    private FloatingActionButton fab_income;
+    private FloatingActionButton fab_expense;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView fab_income_text;
+    private TextView fab_expense_text;
 
-    public DashboardFragment() {
-        // Required empty public constructor
-    }
+    private boolean isOpen=false;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DashboardFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DashboardFragment newInstance(String param1, String param2) {
-        DashboardFragment fragment = new DashboardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private Animation FadeOpen,FadeClose;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View myview = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        fab_main = myview.findViewById(R.id.fb_main_plus);
+        fab_income = myview.findViewById(R.id.income_fb);
+        fab_expense = myview.findViewById(R.id.expense_fb);
+
+        fab_income_text = myview.findViewById(R.id.income_fb_text);
+        fab_expense_text= myview.findViewById(R.id.expense_fb_text);
+
+        FadeOpen = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_open);
+        FadeClose = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_close);
+
+        fab_main.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if(isOpen){
+                    fab_income.startAnimation(FadeClose);
+                    fab_expense.startAnimation(FadeClose);
+                    fab_income.setClickable(false);
+                    fab_expense.setClickable(false);
+
+                    fab_income_text.startAnimation(FadeClose);
+                    fab_expense_text.startAnimation(FadeClose);
+                    fab_income_text.setClickable(false);
+                    fab_expense_text.setClickable(false);
+                    isOpen = false;
+                }else{
+                    fab_income.startAnimation(FadeOpen);
+                    fab_expense.startAnimation(FadeOpen);
+                    fab_income.setClickable(true);
+                    fab_expense.setClickable(true);
+
+                    fab_income_text.startAnimation(FadeOpen);
+                    fab_expense_text.startAnimation(FadeOpen);
+                    fab_income_text.setClickable(true);
+                    fab_expense_text.setClickable(true);
+                    isOpen = true;
+                }
+            }
+
+        });
+
+        return myview;
     }
 }
