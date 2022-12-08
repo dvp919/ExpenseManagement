@@ -120,12 +120,14 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content">
                 
                 <TextView
+                        android:textColor="@color/date_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Income:"
@@ -133,6 +135,7 @@
                     android:padding="10dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:id="@+id/recycler_income"
                     android:layout_height="wrap_content">

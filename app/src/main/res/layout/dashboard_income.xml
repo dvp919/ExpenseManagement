@@ -8,7 +8,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:background="@color/white"
+        android:background="@color/nav_header"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_margin="10dp"
