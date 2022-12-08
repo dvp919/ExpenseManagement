@@ -15,15 +15,14 @@ import android.widget.TextView;
 import com.dvp.expensemanagement.Model.Data;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +49,8 @@ public class IncomeFragment extends Fragment {
         mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid);
 
 
+
+
         recyclerView = myView.findViewById(R.id.recycler_id_income);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -71,18 +72,8 @@ public class IncomeFragment extends Fragment {
                         .setQuery(mIncomeDatabase, Data.class)
                         .build();
 
+
         FirebaseRecyclerAdapter<Data,MyViewHolder> adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull MyViewHolder viewHolder, int position, @NonNull Data model) {
-
-                viewHolder.setType(model.getType());
-                viewHolder.setAmount(model.getAmount());
-                viewHolder.setDate(model.getDate());
-                viewHolder.setNote(model.getNote());
-
-
-            }
-
             @NonNull
             @Override
             public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -91,8 +82,20 @@ public class IncomeFragment extends Fragment {
 
                 return new MyViewHolder(view);
             }
-        };
 
+            @Override
+            protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Data model) {
+
+                holder.setNote(model.getNote());
+                holder.setDate(model.getDate());
+                holder.setType(model.getType());
+                holder.setAmount(model.getAmount());
+
+            }
+
+
+        };
+        adapter.startListening();
         recyclerView.setAdapter(adapter);
 
     }
