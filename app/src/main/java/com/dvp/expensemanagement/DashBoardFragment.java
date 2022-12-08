@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.Layout;
@@ -22,8 +23,11 @@ import com.dvp.expensemanagement.Model.Data;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -32,46 +36,7 @@ import java.util.Date;
  * A simple {@link Fragment} subclass.
  */
 public class DashBoardFragment extends Fragment {
-//
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//
-//    public DashBoardFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment DashBoardFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static DashBoardFragment newInstance(String param1, String param2) {
-//        DashBoardFragment fragment = new DashBoardFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
+
 
     //Floating button
     
@@ -86,6 +51,9 @@ public class DashBoardFragment extends Fragment {
 
     //Animation
     private Animation FadOpen,FadClose;
+
+    //Dashboard income and expense result
+    private TextView totalIncomeResult,totalExpenseResult;
 
     //Firebase
 
@@ -118,6 +86,9 @@ public class DashBoardFragment extends Fragment {
         //Connect to floating text to layout
         fab_income_txt = myview.findViewById(R.id.income_ft_text);
         fab_expense_txt = myview.findViewById(R.id.expense_ft_text);
+
+        totalIncomeResult = myview.findViewById(R.id.income_set_result);
+        totalExpenseResult = myview.findViewById(R.id.expense_set_result);
 
         //Animation connect
 
@@ -159,6 +130,45 @@ public class DashBoardFragment extends Fragment {
             }
         });
 
+        mIncomeDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int totalsum =0;
+                for (DataSnapshot mysnap:snapshot.getChildren()){
+                    Data data = mysnap.getValue(Data.class);
+                    totalsum+= data.getAmount();
+                    
+                    String setResult=String.valueOf(totalsum);
+
+                    totalIncomeResult.setText(setResult);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        mExpenseDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int totalsum1 =0;
+                for (DataSnapshot mysnap:snapshot.getChildren()){
+                    Data data = mysnap.getValue(Data.class);
+                    totalsum1+= data.getAmount();
+
+                    String setResult=String.valueOf(totalsum1);
+
+                    totalExpenseResult.setText(setResult);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         return myview;
     }
